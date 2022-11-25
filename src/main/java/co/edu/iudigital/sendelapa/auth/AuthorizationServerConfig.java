@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +26,30 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter{
+
+    @Value("${security.jwt.client-service}")
+    private String client;
+
+    @Value("${security.jwt.password-service}")
+    private String secret;
+
+    @Value("${security.jwt.scope-read}")
+    private String read;
+
+    @Value("${security.jwt.scope-write}")
+    private String write;
+
+    @Value("${security.jwt.grant-password}")
+    private String grantPassword;
+
+    @Value("${security.jwt.grant-refresh}")
+    private String grantRefresh;
+
+    @Value("${security.jwt.token-validity-seconds}")
+    private Integer accessTime;
+
+    @Value("${security.jwt.refresh-validity-seconds}")
+    private Integer refreshTime;
 
     // en la clase de spring security config lo creamos como un bean
     // entonces podemos usarlo e inyectarlo aqui o cualquier lado
@@ -58,13 +83,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients
                 .inMemory()// tipo de almacenamiento
-                .withClient("security")// creamos cliente
-                .secret(passwordEncoder.encode("555555"))//contraseña y codificamos
-                .scopes("read", "write")// scope: permisos que va tener la app
-                .authorizedGrantTypes("password", "refresh_token")//tipo de concesión del token, como se va a obtener (hay otros mas)
+                .withClient(client)// creamos cliente
+                .secret(passwordEncoder.encode(secret))//contraseña y codificamos
+                .scopes(read, write)// scope: permisos que va tener la app
+                .authorizedGrantTypes(grantPassword, grantRefresh)//tipo de concesión del token, como se va a obtener (hay otros mas)
                 // refresh token obtiene token de acceso renovado y poder continuar en los recursos antes que caduque el token
-                .accessTokenValiditySeconds(3600)//tiempo de validez o cuando caduca
-                .refreshTokenValiditySeconds(3600);// tiempo para el refresh token
+                .accessTokenValiditySeconds(accessTime)//tiempo de validez o cuando caduca
+                .refreshTokenValiditySeconds(refreshTime);// tiempo para el refresh token
         // aqui puedes crear credenciales y demas parametros para más apps
     }
 
@@ -106,6 +131,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     // traduce la información del token
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
+
+        //*-----1
+        JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();// por defacto tiene un token storag
+        //------ 2-------------------------
+        jwtAccessTokenConverter.setSigningKey(JwtConfig.RSA_PRIVATE);// clave secreta
+        jwtAccessTokenConverter.setVerifierKey(JwtConfig.RSA_PUBLIC);
+        //------ 1
+
         return new JwtAccessTokenConverter();// por defacto tiene un token storag
     }
 
