@@ -45,7 +45,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({NotFoundException.class})
-    public ResponseEntity<ErrorDto> getNotFoundRquest(NotFoundException e) {
+    public ResponseEntity<ErrorDto> getNotFoundRequest(NotFoundException e) {
         log.info(e.getMessage());
         return new ResponseEntity<>(e.getErrorDto(), HttpStatus.NOT_FOUND);
 

@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -58,11 +59,26 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
+                .antMatchers("**/swagger-ui.html").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
                 .csrf().disable()//sin proteccion de forms ataques cross por estar en capa react separado del back
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+                //.antMatchers(HttpMethod.GET, "/**")
+                .antMatchers("/app/**/*.{js,html}")
+                .antMatchers("/i18n/**")
+                .antMatchers("/content/**")
+                .antMatchers("/h2-console/**")
+                .antMatchers("/swagger-ui/index.html")
+                .antMatchers("/swagger-ui.html")
+                .antMatchers("/v2/api-docs")
+                .antMatchers("/test/**");
     }
 
 

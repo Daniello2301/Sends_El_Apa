@@ -34,6 +34,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
                 //se parte desde rutas más específicas a mas generales o genéricas
                 // urls abiertas sin autenticación ni autorización
                 // pero lo haremos más sencillo con anotaciones @Secured
+                .antMatchers(HttpMethod.POST, "/users/signup**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/users/signup**").permitAll()
+                .antMatchers(HttpMethod.GET, "/usuarios/uploads/img/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/users/user").permitAll()
                 .antMatchers(HttpMethod.GET, "/transports").permitAll()
                 //.antMatchers(HttpMethod.POST, "/empleados").hasRole("ADMIN")
                 .anyRequest()
@@ -57,7 +61,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
     public CorsConfigurationSource configurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(Arrays.asList("*"));
-        config.setAllowedMethods(Arrays.asList("POST", "GET", "DELETE", "PUT"));
+        config.setAllowedMethods(Arrays.asList("POST", "GET", "DELETE", "PUT", "PATCH", "OPTIONS"));
         config.setAllowCredentials(true);//permitir credenciales
         config.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
