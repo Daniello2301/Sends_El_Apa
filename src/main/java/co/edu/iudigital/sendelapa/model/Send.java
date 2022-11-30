@@ -15,18 +15,25 @@ public class Send implements Serializable {
     @Column(name = "id_send", nullable = false)
     private Long id;
 
+    @Column(nullable = false)
     private String description;
 
+    @Column(nullable = false)
     private int large;
 
+    @Column(nullable = false)
     private int height;
 
+    @Column(nullable = false)
     private int width;
 
+    @Column(nullable = false)
     private int weight;
 
+    @Column(nullable = false)
     private String status;
 
+    @Column(nullable = false)
     private String ubication;
 
     @Column(nullable = false, name = "date_create")
@@ -36,7 +43,7 @@ public class Send implements Serializable {
     private LocalDate dateUpdate;
 
     @ManyToOne
-    @JoinColumn( name = "usuario_id")
+    @JoinColumn( name = "user_id")
     private UserApp user;
 
     @ManyToOne(fetch = FetchType.LAZY)

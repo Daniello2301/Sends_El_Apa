@@ -1,5 +1,6 @@
 package co.edu.iudigital.sendelapa.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -31,16 +32,14 @@ public class Transport implements Serializable {
     @Column
     int quantity;
 
-    @Column
-    String ubication;
-
     @Column(name = "date_create")
     LocalDate dateCreate;
 
     @OneToMany(mappedBy = "transport")
     List<Send> sends;
 
-    @ManyToOne
-    @JoinColumn( name = "usuario_id")
+
+    @ManyToOne(targetEntity = UserApp.class)
+    @JoinColumn( name = "user_id")
     UserApp user;
 }

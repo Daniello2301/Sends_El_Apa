@@ -38,7 +38,15 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
                 .antMatchers(HttpMethod.OPTIONS, "/users/signup**").permitAll()
                 .antMatchers(HttpMethod.GET, "/usuarios/uploads/img/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/users/user").permitAll()
-                .antMatchers(HttpMethod.GET, "/transports").permitAll()
+                // Authorization transport to requests HTTP
+                .antMatchers(HttpMethod.GET, "/transports/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/transports").permitAll()
+                .antMatchers(HttpMethod.PUT, "/transports").permitAll()
+                // Authorization sends to requests HTTP
+                .antMatchers(HttpMethod.GET, "/sends/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/sends").permitAll()
+                .antMatchers(HttpMethod.PUT, "/sends/**").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/sends/send/**").permitAll()
                 //.antMatchers(HttpMethod.POST, "/empleados").hasRole("ADMIN")
                 .anyRequest()
                 .authenticated()// las rutas no especificadas, serán para usuarios autenticados
